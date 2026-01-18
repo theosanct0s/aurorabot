@@ -1,0 +1,22 @@
+{
+  "name": "aurorabot",
+  "version": "1.0.0",
+  "description": "Discord bot using discord.js v14 and slash commands",
+  "main": "src/index.js",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/theosanct0s/aurorabot.git"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "dependencies": {
+    "colorette": "^2.0.20",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5"
+  }
+}
