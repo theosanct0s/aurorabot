@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require('discord.js');
+const { embedColor } = require('../config');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,7 +13,7 @@ module.exports = {
     const avatarUrl = targetUser.displayAvatarURL({ size: 4096 });
 
     const embed = new EmbedBuilder()
-      .setColor(0x8b5cf6)
+      .setColor(embedColor)
       .setTitle(`${targetUser.username}'s avatar`)
       .setImage(avatarUrl);
 

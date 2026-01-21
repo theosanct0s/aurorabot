@@ -1,4 +1,5 @@
 const { Events, EmbedBuilder } = require('discord.js');
+const { embedColor } = require('../config');
 const { logger } = require('../utils/logger');
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
     const displayName = message.member?.displayName || message.author.username;
 
     const replyEmbed = new EmbedBuilder()
-      .setColor(0x8b5cf6)
+      .setColor(embedColor)
       .setTitle(`Hi, ${displayName}!`)
       .setDescription('All good? :)');
 
