@@ -38,31 +38,18 @@ module.exports = {
 
     if (member) {
       const joinedAt = member.joinedAt ? formatTimestamp(member.joinedAt) : 'Not found';
-      const roleList = member.roles.cache
-        .filter((role) => role.id !== interaction.guild.id)
-        .sort((a, b) => b.position - a.position)
-        .map((role) => role.toString());
-
       fields.push({ name: 'Joined this server on', value: joinedAt, inline: true });
-      if (roleList.length > 0) {
-        fields.push({ name: 'Roles', value: roleList.join(', ').slice(0, 1024) });
-      }
     }
 
     const infoEmoji = '<:infoAurora:1463356043202396302>';
     const houseEmoji = '<:houseAurora:1463356115877101618>';
     const calendarEmoji = '<:calendarAurora:1463356167085494292>';
-    const rolesEmoji = '<:userAurora:1463358589308633250>';
 
     fields[0].name = `${infoEmoji} ID`;
     fields[1].name = `${houseEmoji} Account created on`;
     const calendarField = fields.find((f) => f.name === 'Joined this server on');
     if (calendarField) {
       calendarField.name = `${calendarEmoji} Joined this server on`;
-    }
-    const rolesField = fields.find((f) => f.name === 'Roles');
-    if (rolesField) {
-      rolesField.name = `${rolesEmoji} Roles`;
     }
 
     const embed = new EmbedBuilder()
