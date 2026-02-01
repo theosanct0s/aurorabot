@@ -33,22 +33,46 @@ function loadCommands(commandsPath) {
   return { commands, commandData };
 }
 
-async function registerCommands(client, commandData) {
+async function registerCommands(client, commandData, options = {}) {
+  const { registerGuilds = true, registerGlobal = false } = options;
+
   if (!commandData || commandData.length === 0) {
     logger.warn('No commands to register.');
     return;
   }
 
+  const applicationId = client.application?.id || client.user?.id;
+
+  if (!applicationId) {
+    throw new Error('Application ID unavailable; cannot register commands.');
+  }
+
   const rest = new REST({ version: '10' }).setToken(token);
 
-  try {
-    await rest.put(Routes.applicationCommands(client.application.id), {
-      body: commandData,
-    });
-    logger.success(`Registered commands: ${commandData.length}.`);
-  } catch (error) {
-    logger.error('Failed to register commands.', error);
-    throw error;
+  if (registerGlobal) {
+    try {
+      await rest.put(Routes.applicationCommands(applicationId), {
+        body: commandData,
+      });
+      logger.success(`Registered global commands: ${commandData.length}.`);
+    } catch (error) {
+      logger.error('Failed to register global commands.', error);
+      throw error;
+    }
+  }
+
+  if (!registerGuilds) return;
+
+  const guilds = Array.from(client.guilds.cache.values());
+
+  for (const guild of guilds) {
+    try {
+      await rest.put(Routes.applicationGuildCommands(applicationId, guild.id), {
+        body: commandData,
+      });
+    } catch (error) {
+      logger.error(`Failed to register commands for guild ${guild.id}.`, error);
+    }
   }
 }
 
