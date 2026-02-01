@@ -7,7 +7,11 @@ module.exports = {
   once: true,
   async execute(client) {
     try {
-      await registerCommands(client, client.commandData);
+      await client.guilds.fetch();
+      await registerCommands(client, client.commandData, {
+        registerGuilds: true,
+        registerGlobal: false,
+      });
     } catch (error) {
       logger.error('Failed to register commands.', error);
     }
