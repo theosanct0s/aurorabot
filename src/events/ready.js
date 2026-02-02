@@ -20,7 +20,7 @@ module.exports = {
       client.user.setPresence({
         activities: [
           {
-            name: '💜',
+            name: 'Use /help for commands ✨',
             type: 4, // 0=Playing | 1=Streaming | 2=Listening | 3=Watching | 4=Custom | 5=Competing
           },
         ],
