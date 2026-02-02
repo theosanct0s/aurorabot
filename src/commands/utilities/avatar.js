@@ -1,7 +1,8 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require('discord.js');
-const { embedColor } = require('../config');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { embedColor } = require('../../config');
 
 module.exports = {
+  category: 'utilities',
   data: new SlashCommandBuilder()
     .setName('avatar')
     .setDescription('Shows the avatar of a user.')

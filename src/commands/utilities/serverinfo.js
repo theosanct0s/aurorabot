@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, ChannelType } = require('discord.js');
-const { embedColor } = require('../config');
+const { embedColor } = require('../../config');
 
 function formatTimestamp(date) {
   const ts = Math.floor(date.getTime() / 1000);
@@ -7,6 +7,7 @@ function formatTimestamp(date) {
 }
 
 module.exports = {
+  category: 'utilities',
   data: new SlashCommandBuilder()
     .setName('serverinfo')
     .setDescription('Show info about the server.')

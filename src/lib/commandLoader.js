@@ -13,22 +13,40 @@ function loadCommands(commandsPath) {
     return { commands, commandData };
   }
 
-  const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter((file) => file.endsWith('.js'));
+  const queue = [commandsPath];
+  const commandFiles = [];
 
-  for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
+  while (queue.length > 0) {
+    const current = queue.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const entryPath = path.join(current, entry.name);
+
+      if (entry.isDirectory()) {
+        queue.push(entryPath);
+        continue;
+      }
+
+      if (entry.isFile() && entry.name.endsWith('.js')) {
+        commandFiles.push(entryPath);
+      }
+    }
+  }
+
+  for (const filePath of commandFiles) {
     const command = require(filePath);
+    const relativeName = path.relative(commandsPath, filePath);
 
     if (!command?.data || typeof command.execute !== 'function') {
-      logger.warn(`Skipping invalid command: ${file}`);
+      logger.warn(`Skipping invalid command: ${relativeName}`);
       continue;
     }
 
     commands.set(command.data.name, command);
     commandData.push(command.data.toJSON());
   }
+
   logger.info(`Loaded ${commands.size} commands.`);
   return { commands, commandData };
 }

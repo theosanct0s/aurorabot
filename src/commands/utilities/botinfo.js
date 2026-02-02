@@ -1,7 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { version } = require('../../package.json');
+const { version } = require('../../../package.json');
 
 module.exports = {
+  category: 'utilities',
   data: new SlashCommandBuilder()
     .setName('botinfo')
     .setDescription('Shows bot info.'),
