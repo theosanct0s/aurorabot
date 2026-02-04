@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { embedColor } = require('../../config');
+const { embedColor, ownerId, applicationId } = require('../../config');
 
 module.exports = {
   category: 'utilities',
@@ -18,9 +18,9 @@ module.exports = {
       .setTitle(`${targetUser.username}'s avatar`)
       .setImage(avatarUrl);
 
-    if (targetUser.id === '277375966341496832') { // bot creator's user ID
+    if (ownerId && targetUser.id === ownerId) {
       embed.setFooter({ text: 'This is my creator :3' });
-    } else if (targetUser.id === '1462181725680701666') { // bot application ID
+    } else if (applicationId && targetUser.id === applicationId) {
       embed.setFooter({ text: "That's me!" });
     }
 
