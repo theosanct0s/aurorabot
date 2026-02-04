@@ -1,8 +1,13 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { embedColor } = require('../../config');
 
-async function fetchHugGif() {
-  const response = await fetch('https://nekos.best/api/v2/hug');
+const ACTION = 'hug';
+const EMOJI = '🤗';
+const SEND_TITLE = 'Incoming hug!';
+const RETURN_TITLE = 'Hug returned!';
+
+async function fetchActionGif() {
+  const response = await fetch(`https://nekos.best/api/v2/${ACTION}`);
 
   if (!response.ok) {
     throw new Error(`nekos.best responded with ${response.status}`);
@@ -12,7 +17,7 @@ async function fetchHugGif() {
   return payload?.results?.[0]?.url || null;
 }
 
-const createHugEmbed = (title, description, gifUrl) =>
+const createActionEmbed = (title, description, gifUrl) =>
   new EmbedBuilder()
     .setColor(embedColor)
     .setTitle(title)
@@ -23,12 +28,12 @@ const createHugEmbed = (title, description, gifUrl) =>
 const createDownloadButton = (gifUrl) =>
   new ButtonBuilder().setLabel('Download GIF').setStyle(ButtonStyle.Link).setURL(gifUrl);
 
-const buildHugButtons = (gifUrl, customId, disabled = false) =>
+const buildActionButtons = (gifUrl, customId, disabled = false) =>
   new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId(customId)
       .setLabel('Hug back')
-      .setEmoji('🤗')
+      .setEmoji(EMOJI)
       .setStyle(ButtonStyle.Primary)
       .setDisabled(disabled),
     createDownloadButton(gifUrl),
@@ -37,7 +42,7 @@ const buildHugButtons = (gifUrl, customId, disabled = false) =>
 module.exports = {
   category: 'fun',
   data: new SlashCommandBuilder()
-    .setName('hug')
+    .setName(ACTION)
     .setDescription('Send a cozy hug to someone.')
     .addUserOption((option) =>
       option
@@ -56,7 +61,7 @@ module.exports = {
     let gifUrl;
 
     try {
-      gifUrl = await fetchHugGif();
+      gifUrl = await fetchActionGif();
     } catch (error) {
       await interaction.reply({
         content: 'I could not fetch a hug right now. Try again later.',
@@ -67,17 +72,17 @@ module.exports = {
 
     if (!gifUrl) {
       await interaction.reply({
-        content: 'The hug API returned an unexpected response.',
+        content: 'The API returned an unexpected response.',
         ephemeral: true,
       });
       return;
     }
 
     const description = `${interaction.user} sends a warm hug to ${targetUser}!`;
-    const embed = createHugEmbed('Incoming hug!', description, gifUrl);
+    const embed = createActionEmbed(SEND_TITLE, description, gifUrl);
 
-    const customId = `hug-return-${interaction.id}`;
-    const row = buildHugButtons(gifUrl, customId);
+    const customId = `${ACTION}-return-${interaction.id}`;
+    const row = buildActionButtons(gifUrl, customId);
 
     const sentMessage = await interaction.reply({
       embeds: [embed],
@@ -103,7 +108,7 @@ module.exports = {
       let returnGif;
 
       try {
-        returnGif = await fetchHugGif();
+        returnGif = await fetchActionGif();
       } catch (error) {
         await buttonInteraction.reply({
           content: 'I could not send a return hug right now. Try again in a moment.',
@@ -114,18 +119,18 @@ module.exports = {
 
       if (!returnGif) {
         await buttonInteraction.reply({
-          content: 'The hug API returned an unexpected response.',
+          content: 'The API returned an unexpected response.',
           ephemeral: true,
         });
         return;
       }
 
-      const disabledRow = buildHugButtons(gifUrl, customId, true);
+      const disabledRow = buildActionButtons(gifUrl, customId, true);
 
       await buttonInteraction.update({ components: [disabledRow] });
 
-      const returnEmbed = createHugEmbed(
-        'Hug returned!',
+      const returnEmbed = createActionEmbed(
+        RETURN_TITLE,
         `${targetUser} sends a hug back to ${interaction.user}!`,
         returnGif,
       );
@@ -139,7 +144,7 @@ module.exports = {
     collector.on('end', async (_, reason) => {
       if (reason === 'messageDelete' || reason === 'hug-returned') return;
 
-      const disabledRow = buildHugButtons(gifUrl, customId, true);
+      const disabledRow = buildActionButtons(gifUrl, customId, true);
 
       await sentMessage.edit({ components: [disabledRow] }).catch(() => {});
     });
