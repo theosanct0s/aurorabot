@@ -1,6 +1,15 @@
-# Aurora
+# Aurora Bot
 
-Aurora is my personal Discord bot, built with **Node.js** and **discord.js v14**. It’s an actively developed project where I experiment, learn, and add features over time while using it in real servers.
+[![Node.js 18.18+](https://img.shields.io/badge/Node.js-18.18%2B-43853d?logo=node.js&logoColor=white)](https://nodejs.org/en)
+[![discord.js v14](https://img.shields.io/badge/discord.js-v14-5865F2?logo=discord&logoColor=white)](https://discord.js.org/#/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen)](#)
+
+> A personal Discord bot where I test ideas and ship features. Focused on clean slash commands, quick utilities, and a few fun interactions.
+
+- Actively developed and used on real servers
+- Slash commands only, auto-registered
+- Mix of fun, utility, and moderation tools
 
 ---
 
@@ -22,15 +31,19 @@ Aurora is my personal Discord bot, built with **Node.js** and **discord.js v14**
    ```bash
    from .env.example to .env
    ```
-3. Add your bot token to `.env`:
+3. Configure your environment variables in `.env`:
    ```bash
    DISCORD_TOKEN=bot_token_here
+   APPLICATION_ID=bot_id_here
+   OWNER_ID=owner_id_here
+   EMBED_COLOR=#aa8ed6 (The hex color used for all bot embeds)
    ```
-4. Install dependencies:
+4. In the [Discord Developer Portal](https://discord.com/developers/applications), enable the **Message Content Intent** for the bot (needed to reply to mentions).
+5. Install dependencies:
    ```bash
    npm install
    ```
-5. Start the bot:
+6. Start the bot:
    ```bash
    node .
    ```
