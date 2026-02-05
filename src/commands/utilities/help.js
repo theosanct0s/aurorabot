@@ -24,6 +24,11 @@ module.exports = {
     const normalizedQuery = query ? query.toLowerCase() : null;
     const matched = normalizedQuery ? commands.get(normalizedQuery) : null;
 
+    if (matched?.hidden) {
+      await interaction.reply({ content: `Command not found: /${normalizedQuery}`, ephemeral: true });
+      return;
+    }
+
     if (normalizedQuery && !matched) {
       await interaction.reply({ content: `Command not found: /${normalizedQuery}`, ephemeral: true });
       return;
@@ -41,6 +46,7 @@ module.exports = {
     }
 
     const grouped = commands.reduce((acc, cmd) => {
+      if (cmd.hidden) return acc;
       const category = (cmd.category || 'utilities').toLowerCase();
       const normalized = category.charAt(0).toUpperCase() + category.slice(1);
       acc[normalized] = acc[normalized] || [];
