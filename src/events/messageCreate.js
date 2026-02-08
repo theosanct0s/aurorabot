@@ -21,8 +21,8 @@ module.exports = {
 
     const replyEmbed = new EmbedBuilder()
       .setColor(embedColor)
-      .setTitle(`Hi, ${displayName}!`)
-      .setDescription('All good? :)');
+      .setTitle(`Hiya, ${displayName}!`)
+      .setDescription("I'm here and ready. Use `/help` to see all commands.");
 
     try {
       await message.react('💜');
