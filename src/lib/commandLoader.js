@@ -4,7 +4,9 @@ const { Collection, REST, Routes } = require('discord.js');
 const { token } = require('../config');
 const { logger } = require('../utils/logger');
 
-function loadCommands(commandsPath) {
+function loadCommands(commandsPath, options = {}) {
+  const { log = true, logLabel = 'Loaded' } = options;
+
   const commands = new Collection();
   const commandData = [];
 
@@ -35,6 +37,9 @@ function loadCommands(commandsPath) {
   }
 
   for (const filePath of commandFiles) {
+    // drop the cached version so reloads pick up fresh code
+    delete require.cache[require.resolve(filePath)];
+
     const command = require(filePath);
     const relativeName = path.relative(commandsPath, filePath);
 
@@ -47,7 +52,9 @@ function loadCommands(commandsPath) {
     commandData.push(command.data.toJSON());
   }
 
-  logger.info(`Loaded ${commands.size} commands.`);
+  if (log) {
+    logger.info(`${logLabel} ${commands.size} commands.`);
+  }
   return { commands, commandData };
 }
 
